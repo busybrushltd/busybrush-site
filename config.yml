@@ -1,0 +1,115 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "settings"
+    label: "Settings"
+    delete: false
+    files:
+      - file: "data/site.json"
+        label: "Site Content"
+        name: "site"
+        fields:
+          - { label: "Brand", name: "brand", widget: "string" }
+          - { label: "Phone", name: "phone", widget: "string" }
+          - { label: "Email", name: "email", widget: "string" }
+          - label: "Service Area"
+            name: "service_area"
+            widget: "list"
+            field: { label: "City", name: "city", widget: "string" }
+          - label: "Navigation"
+            name: "nav"
+            widget: "list"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Anchor (optional)", name: "anchor", widget: "string", required: false }
+              - { label: "Link (optional)", name: "href", widget: "string", required: false }
+          - label: "Sections (drag to reorder)"
+            name: "sections"
+            widget: "list"
+            types:
+              - label: "Hero"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - { label: "Anchor", name: "anchor", widget: "string", required: false }
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Subtitle", name: "subtitle", widget: "text", required: false }
+                  - label: "Buttons"
+                    name: "cta"
+                    widget: "list"
+                    fields:
+                      - { label: "Label", name: "label", widget: "string" }
+                      - { label: "Link", name: "href", widget: "string" }
+                      - { label: "Style (light/solid)", name: "style", widget: "string", required: false }
+                  - label: "Chips"
+                    name: "chips"
+                    widget: "list"
+                    fields:
+                      - { label: "Label", name: "label", widget: "string" }
+                      - { label: "Link", name: "href", widget: "string", required: false }
+              - label: "Features / Services"
+                name: "features"
+                widget: "object"
+                fields:
+                  - { label: "Anchor", name: "anchor", widget: "string", required: false }
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Subtitle", name: "subtitle", widget: "text", required: false }
+                  - label: "Items"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - { label: "Title", name: "title", widget: "string" }
+                      - { label: "Description", name: "desc", widget: "text", required: false }
+              - label: "Gallery / Portfolio"
+                name: "gallery"
+                widget: "object"
+                fields:
+                  - { label: "Anchor", name: "anchor", widget: "string", required: false }
+                  - { label: "Title", name: "title", widget: "string", required: false }
+                  - { label: "Subtitle", name: "subtitle", widget: "text", required: false }
+                  - label: "Images"
+                    name: "images"
+                    widget: "list"
+                    field: { label: "Image Path or URL", name: "image", widget: "image" }
+              - label: "Testimonials"
+                name: "testimonials"
+                widget: "object"
+                fields:
+                  - { label: "Anchor", name: "anchor", widget: "string", required: false }
+                  - { label: "Title", name: "title", widget: "string", required: false }
+                  - label: "Items"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - { label: "Name", name: "name", widget: "string" }
+                      - { label: "Text", name: "text", widget: "text" }
+              - label: "Contact"
+                name: "contact"
+                widget: "object"
+                fields:
+                  - { label: "Anchor", name: "anchor", widget: "string", required: false }
+                  - { label: "Title", name: "title", widget: "string", required: false }
+                  - { label: "Subtitle", name: "subtitle", widget: "text", required: false }
+                  - label: "Service Options"
+                    name: "services"
+                    widget: "list"
+                    field: { label: "Service", name: "service", widget: "string" }
+              - label: "CTA Bar"
+                name: "cta_bar"
+                widget: "object"
+                fields:
+                  - { label: "Text", name: "text", widget: "string" }
+                  - { label: "Subtext", name: "sub", widget: "string", required: false }
+                  - { label: "Button Label", name: "cta", widget: "string", required: false }
+                  - { label: "Button Link", name: "href", widget: "string", required: false }
+          - label: "Footer Links"
+            name: "footer_links"
+            widget: "list"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Link", name: "href", widget: "string" }
