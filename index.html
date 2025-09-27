@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Busy Brush Painting LTD</title>
+  <style>
+    :root{
+      --bg:#fff7ed; --card:#ffffff; --ink:#0f172a; --muted:#7c2d12;
+      --accent:#f97316; --accent-600:#ea580c; --teal:#0f766e; --border:#fed7aa;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,Arial;color:var(--ink);
+      background: radial-gradient(1000px 400px at 85% -10%, rgba(253,230,138,.65), transparent 60%),
+                 radial-gradient(900px 500px at -10% 20%, rgba(255,237,213,.8), transparent 55%), #fff7ed;}
+    .container{max-width:1120px;margin:0 auto;padding:0 20px}
+    .topbar{position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(8px);background:rgba(255,255,255,.9);border-bottom:1px solid #fde68a}
+    .row{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+    .logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--teal));color:#fff;
+          display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(249,115,22,.35)}
+    nav a{margin-left:18px;color:var(--accent-600);font-weight:600;text-decoration:none}
+    nav a:hover{color:var(--teal)}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:12px;border:1px solid var(--accent);
+      color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-600));text-decoration:none;font-weight:700;
+      box-shadow:0 8px 22px rgba(249,115,22,.25)}
+    .btn.light{background:#fff;color:var(--accent-600);box-shadow:none}
+    .section{padding:64px 0}
+    h1{font-size:44px;margin:0 0 8px} h2{font-size:32px;margin:0 0 8px}
+    p.lead{color:#7c2d12; font-size:18px; max-width:720px}
+    .grid{display:grid;gap:20px}.g-2{grid-template-columns:repeat(2,1fr)}.g-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:900px){.g-2,.g-3{grid-template-columns:1fr} .row nav{display:none}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:0 10px 24px rgba(249,115,22,.07)}
+    .feature{position:relative;overflow:hidden}
+    .feature:hover{box-shadow:0 14px 30px rgba(234,88,12,.18);border-color:#fdba74}
+    .stars{color:#f59e0b}
+    .input,select,textarea{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #f3d7b6;outline:none;background:#fffdf9}
+    .input:focus,select:focus,textarea:focus{border-color:#fdba74;box-shadow:0 0 0 3px rgba(253,186,116,.35)}
+    .footer{border-top:1px solid #fed7aa;padding:28px 0;color:#7c2d12;background:linear-gradient(180deg,transparent,rgba(255,237,213,.5))}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,#fdba74,transparent);margin:28px 0}
+    .heroCover{min-height:420px;display:flex;align-items:center}
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:#fff;color:#7c2d12;
+      text-decoration:none;border:1px solid #fdba74;box-shadow:0 6px 14px rgba(253,186,116,.25);font-weight:600}
+    .gallery{height:180px;display:grid;grid-template-columns:1fr 1fr 1fr}
+    .thumb{background:#ffe4cc}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container row">
+      <a href="#" class="brand"><span class="logo">🖌️</span><strong id="navBrand">Busy Brush</strong></a>
+      <nav id="navLinks"></nav>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+  <footer class="footer">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>© <span id="year"></span> <span id="footerBrand">Busy Brush Painting LTD</span>. All rights reserved.</div>
+      <div id="footerLinks" style="display:flex;gap:16px"></div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const el = (tag, attrs={}, html="") => {
+      const e = document.createElement(tag);
+      Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
+      if (html) e.innerHTML = html;
+      return e;
+    };
+
+    const renderers = {
+      hero(section){
+        const wrap = el('section', {class:'section heroCover', id: section.anchor || ''});
+        wrap.innerHTML = \`
+          <div class="container">
+            <h1>\${section.title || ''}</h1>
+            \${section.subtitle ? '<p class="lead">'+section.subtitle+'</p>' : ''}
+            <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+              \${(section.cta||[]).map(c => '<a class="btn'+(c.style==='light'?' light':'')+'" href="'+(c.href||'#')+'">'+c.label+'</a>').join('')}
+            </div>
+            <div class="chips">
+              \${section.chips ? section.chips.map(ch => '<a class="chip" href="'+(ch.href||'#')+'">'+ch.label+'</a>').join('') : ''}
+            </div>
+          </div>\`;
+        return wrap;
+      },
+      features(section){
+        const wrap = el('section', {class:'section', id: section.anchor || ''});
+        wrap.innerHTML = \`
+          <div class="container">
+            <h2>\${section.title || ''}</h2>
+            \${section.subtitle ? '<p class="lead">'+section.subtitle+'</p>' : ''}
+            <div class="grid g-3" style="margin-top:18px" id="features"></div>
+          </div>\`;
+        const grid = wrap.querySelector('#features');
+        (section.items||[]).forEach(it => {
+          const card = el('div', {class:'card feature'}, '<strong>'+it.title+'</strong><p class="muted">'+(it.desc||'')+'</p>');
+          grid.appendChild(card);
+        });
+        return wrap;
+      },
+      gallery(section){
+        const wrap = el('section', {class:'section', id: section.anchor || ''});
+        wrap.innerHTML = \`
+          <div class="container">
+            <h2>\${section.title || 'Portfolio'}</h2>
+            \${section.subtitle ? '<p class="lead">'+section.subtitle+'</p>' : ''}
+            <div class="grid g-3" style="margin-top:18px" id="g"></div>
+          </div>\`;
+        const grid = wrap.querySelector('#g');
+        (section.images||[]).forEach(src => {
+          const d = el('div', {class:'card'});
+          d.innerHTML = '<div class="gallery">'+
+            '<div class="thumb" style="background:#ffe4cc"></div>'+
+            '<div class="thumb" style="background:#ffd3ad"></div>'+
+            '<div class="thumb" style="background:#ffbf85"></div>'+
+          '</div>';
+          grid.appendChild(d);
+        });
+        return wrap;
+      },
+      testimonials(section){
+        const wrap = el('section', {class:'section', id: section.anchor || ''});
+        wrap.innerHTML = \`
+          <div class="container">
+            <h2>\${section.title || 'What Clients Say'}</h2>
+            <div class="grid g-3" style="margin-top:18px" id="t"></div>
+          </div>\`;
+        const grid = wrap.querySelector('#t');
+        (section.items||[]).forEach(t => {
+          const card = el('div', {class:'card'});
+          card.innerHTML = '<div class="stars">★★★★★</div><p class="muted">“'+t.text+'”</p><p class="muted">— '+t.name+'</p>';
+          grid.appendChild(card);
+        });
+        return wrap;
+      },
+      contact(section){
+        const wrap = el('section', {class:'section', id: section.anchor || ''});
+        wrap.innerHTML = \`
+          <div class="container grid g-2">
+            <div class="card">
+              <h2>\${section.title || 'Get a Free Quote'}</h2>
+              <p class="lead">\${section.subtitle || 'Tell us about your project and we\\'ll get back within one business day.'}</p>
+              <form onsubmit="handleSubmit(event)" style="margin-top:12px" id="quoteForm">
+                <div style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
+                  <div><label>Name</label><input class="input" required name="name" placeholder="Jane Doe"/></div>
+                  <div><label>Email</label><input class="input" required type="email" name="email" placeholder="you@example.com"/></div>
+                  <div><label>Phone</label><input class="input" name="phone" placeholder="(604) 555-1234"/></div>
+                  <div><label>Service</label>
+                    <select name="service">\${(section.services||['Interior','Exterior']).map(s=>'<option>'+s+'</option>').join('')}</select>
+                  </div>
+                  <div style="grid-column:1/-1"><label>Project Details</label><textarea class="input" rows="5" name="message" placeholder="Square footage, rooms, timeline, address…"></textarea></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;margin-top:12px">
+                  <button class="btn" type="submit">Request Quote</button>
+                  <span id="thanks" class="muted" style="display:none">Thanks! We\\'ll be in touch shortly.</span>
+                </div>
+              </form>
+            </div>
+            <div class="card">
+              <p class="muted">Phone</p><p><strong id="cPhone"></strong></p>
+              <p class="muted">Email</p><p><strong id="cEmail"></strong></p>
+              <p class="muted">Service Area</p><p><strong id="cArea"></strong></p>
+            </div>
+          </div>\`;
+        return wrap;
+      },
+      cta_bar(section){
+        const box = el('div', {class:'container', style:'padding:0 20px'});
+        const bar = el('div', {style:'margin:18px auto 28px;max-width:1120px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent-600));color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;box-shadow:0 10px 28px rgba(249,115,22,.35)'});
+        bar.innerHTML = '<div><strong>'+ (section.text||'Need a painter?') +'</strong><br/><span style="opacity:.9">'+ (section.sub||'Get a free quote today') +'</span></div>' +
+                        '<a class="btn light" href="'+ (section.href||'#contact') +'">'+ (section.cta||'Request') +'</a>';
+        box.appendChild(bar);
+        return box;
+      }
+    };
+
+    function handleSubmit(e){
+      e.preventDefault();
+      const t = document.getElementById('thanks'); if (t) t.style.display = 'inline';
+      e.target.reset();
+    }
+
+    fetch('./data/site.json?_='+Date.now()).then(r=>r.json()).then(cfg=>{
+      // Nav
+      document.getElementById('navBrand').textContent = cfg.brand || 'Busy Brush';
+      document.getElementById('footerBrand').textContent = cfg.brand || 'Busy Brush Painting LTD';
+      const nav = document.getElementById('navLinks');
+      (cfg.nav || []).forEach(n => {
+        const a = el('a', {href: n.href || '#'+(n.anchor||'')}, n.label || '');
+        nav.appendChild(a);
+      });
+
+      // Sections
+      const app = document.getElementById('app');
+      (cfg.sections || []).forEach(sec => {
+        const r = renderers[sec.type];
+        if (r) app.appendChild(r(sec));
+        const div = el('div',{class:'divider'}); app.appendChild(div);
+      });
+
+      // Fill contact details if any
+      const cP = document.getElementById('cPhone'); if (cP) cP.textContent = cfg.phone || '';
+      const cE = document.getElementById('cEmail'); if (cE) cE.textContent = cfg.email || '';
+      const cA = document.getElementById('cArea'); if (cA) cA.textContent = (cfg.service_area || []).join(', ');
+
+      // Footer links
+      const fl = document.getElementById('footerLinks');
+      (cfg.footer_links || []).forEach(f => {
+        const a = el('a', {href: f.href || '#'}, f.label || '');
+        fl.appendChild(a);
+      });
+    }).catch(err => {
+      document.getElementById('app').innerHTML = '<div class="container section"><h2>Site not configured</h2><p class="lead">Could not load data/site.json</p></div>';
+      console.warn(err);
+    });
+  </script>
+</body>
+</html>
